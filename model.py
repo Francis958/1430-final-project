@@ -74,7 +74,7 @@ def ResNet34(shape = (48, 48, 1), classes = hp.num_class):
 
 def basic_model():
     model= tf.keras.models.Sequential()
-    model.add(tf.keras.layers.Input(shape = (48,48,1)))
+    model.add(tf.keras.layers.Input(shape = hp.shape))
     model.add(Conv2D(32, kernel_size=(3, 3), padding='same', activation='relu', input_shape=(128, 128, 1)))
     model.add(Conv2D(64,(3,3), padding='same', activation='relu' ))
     model.add(BatchNormalization())
