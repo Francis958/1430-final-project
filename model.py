@@ -39,7 +39,7 @@ def convolutional_block(x, filter):
     x = tf.keras.layers.Activation('relu')(x)
     return x
 
-def ResNet34(shape = (48, 48, 1), classes = 7):
+def ResNet34(shape = (48, 48, 1), classes = hp.num_class):
     # Step 1 (Setup Input Layer)
     x_input = tf.keras.layers.Input(shape)
     x = tf.keras.layers.ZeroPadding2D((3, 3))(x_input)
@@ -74,6 +74,7 @@ def ResNet34(shape = (48, 48, 1), classes = 7):
 
 def basic_model():
     model= tf.keras.models.Sequential()
+    model.add(tf.keras.layers.Input(shape = (48,48,1)))
     model.add(Conv2D(32, kernel_size=(3, 3), padding='same', activation='relu', input_shape=(128, 128, 1)))
     model.add(Conv2D(64,(3,3), padding='same', activation='relu' ))
     model.add(BatchNormalization())
@@ -105,4 +106,5 @@ def basic_model():
     model.add(Dropout(0.25))
 
     model.add(Dense(hp.num_class, activation='softmax'))
+    print(model.summary())
     return model

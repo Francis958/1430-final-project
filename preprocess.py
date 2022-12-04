@@ -10,7 +10,7 @@ from skimage.feature import hog
 
 
 def preprocess(train_dir,test_dir,BATCH_SIZE):
-    SEED = 42
+    SEED = 48
     IMG_HEIGHT = 48
     IMG_WIDTH = 48
 
@@ -48,6 +48,7 @@ def preprocess(train_dir,test_dir,BATCH_SIZE):
                                                 class_mode='categorical',
                                                 subset='training', 
                                                 seed = SEED)
+    print(next(train_gen)[0].shape,next(train_gen)[1].shape)
     return train_gen,val_gen,test_gen
 
 
