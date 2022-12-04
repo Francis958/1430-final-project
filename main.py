@@ -16,7 +16,7 @@ def parse_args():
     parser.add_argument(
         "--model",
         required=True,
-        choices=["Resnet", "base_model"],
+        choices=["Resnet", "base_model","simple_CNN"],
         help="""model selection""",
     )
     return parser.parse_args()
@@ -31,6 +31,9 @@ if __name__ == '__main__':
         train(train_dir,test_dir,my_model,ARGS.model)
     elif ARGS.model == 'base_model':
         my_model = model.basic_model()
+        train(train_dir,test_dir,my_model,ARGS.model)
+    elif ARGS.model == 'simple_CNN':
+        my_model = model.simple_CNN(hp.shape,hp.num_class)
         train(train_dir,test_dir,my_model,ARGS.model)
 
 

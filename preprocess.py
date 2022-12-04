@@ -14,10 +14,7 @@ def preprocess(train_dir,test_dir,BATCH_SIZE):
     IMG_HEIGHT = 48
     IMG_WIDTH = 48
 
-    train_datagen = ImageDataGenerator(horizontal_flip=True,
-                                    width_shift_range=0.1,
-                                    height_shift_range=0.05, 
-                                    validation_split=0.2,
+    train_datagen = ImageDataGenerator(validation_split=0.2,
                                     rescale=1./255)
     test_datagen = ImageDataGenerator(rescale=1./255)
 
@@ -90,3 +87,4 @@ def preprocess(train_dir,test_dir,BATCH_SIZE):
 
 
 
+print(tf.config.list_physical_devices())
