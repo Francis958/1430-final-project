@@ -19,8 +19,7 @@ def preprocess(train_dir,test_dir,BATCH_SIZE):
                                     height_shift_range=0.05, 
                                     validation_split=0.2,
                                     rescale=1./255)
-    test_datagen = ImageDataGenerator(validation_split=0.2,
-                                    rescale=1./255)
+    test_datagen = ImageDataGenerator(rescale=1./255)
 
     train_gen = train_datagen.flow_from_directory(directory=train_dir,
                                                 target_size=(IMG_HEIGHT, IMG_WIDTH),
@@ -48,7 +47,6 @@ def preprocess(train_dir,test_dir,BATCH_SIZE):
                                                 class_mode='categorical',
                                                 subset='training', 
                                                 seed = SEED)
-    print(next(train_gen)[0].shape,next(train_gen)[1].shape)
     return train_gen,val_gen,test_gen
 
 

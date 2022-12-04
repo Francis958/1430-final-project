@@ -39,7 +39,7 @@ def convolutional_block(x, filter):
     x = tf.keras.layers.Activation('relu')(x)
     return x
 
-def ResNet34(shape = (48, 48, 1), classes = hp.num_class):
+def ResNet34(shape = hp.shape, classes = hp.num_class):
     # Step 1 (Setup Input Layer)
     x_input = tf.keras.layers.Input(shape)
     x = tf.keras.layers.ZeroPadding2D((3, 3))(x_input)
@@ -49,10 +49,10 @@ def ResNet34(shape = (48, 48, 1), classes = hp.num_class):
     x = tf.keras.layers.Activation('relu')(x)
     x = tf.keras.layers.MaxPool2D(pool_size=3, strides=1, padding='same')(x)
     # Define size of sub-blocks and initial filter size
-    block_layers = [3, 4, 6, 3]
+    block_layers = [3, 4]
     filter_size = 64
     # Step 3 Add the Resnet Blocks
-    for i in range(4):
+    for i in range(2):
         if i == 0:
             # For sub-block 1 Residual/Convolutional block not needed
             for j in range(block_layers[i]):
@@ -75,36 +75,47 @@ def ResNet34(shape = (48, 48, 1), classes = hp.num_class):
 def basic_model():
     model= tf.keras.models.Sequential()
     model.add(tf.keras.layers.Input(shape = hp.shape))
-    model.add(Conv2D(32, kernel_size=(3, 3), padding='same', activation='relu', input_shape=(128, 128, 1)))
-    model.add(Conv2D(64,(3,3), padding='same', activation='relu' ))
-    model.add(BatchNormalization())
-    model.add(MaxPool2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
+    model.add(tf.keras.layers.Conv2D(filters = 32, kernel_size = 3, activation = 'relu',input_shape = [48,48,1]))
+    #Pooling
+    model.add(tf.keras.layers.BatchNormalization())
+    model.add(tf.keras.layers.MaxPool2D(pool_size = 2, strides = 2))
+    model.add(tf.keras.layers.Dropout(0.25))
 
-    model.add(Conv2D(128,(5,5), padding='same', activation='relu'))
-    model.add(BatchNormalization())
-    model.add(MaxPool2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
+    #Convolution
+    model.add(tf.keras.layers.Conv2D(filters = 64, kernel_size = 3, activation = 'relu',input_shape = [48,48,1]))
+    #Pooling
+    model.add(tf.keras.layers.BatchNormalization())
+    model.add(tf.keras.layers.MaxPool2D(pool_size = 2, strides = 2))
+    model.add(tf.keras.layers.Dropout(0.25))
 
-    model.add(Conv2D(512,(3,3), padding='same', activation='relu', kernel_regularizer=regularizers.l2(0.01)))
-    model.add(BatchNormalization())
-    model.add(MaxPool2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
+    ################  3rd Layer ################
+    #Convolution
+    model.add(tf.keras.layers.Conv2D(filters = 128, kernel_size = 3, activation = 'relu', input_shape = [48,48,1]))
+    #Pooling
+    model.add(tf.keras.layers.BatchNormalization())
+    model.add(tf.keras.layers.MaxPool2D(pool_size = 2, strides = 2))
+    model.add(tf.keras.layers.Dropout(0.25))
 
-    model.add(Conv2D(512,(3,3), padding='same', activation='relu', kernel_regularizer=regularizers.l2(0.01)))
-    model.add(BatchNormalization())
-    model.add(MaxPool2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
+    ################  4th Layer ################
+    #Convolution
+    model.add(tf.keras.layers.Conv2D(filters = 512, kernel_size = 3, activation = 'relu', input_shape = [48,48,1]))
+    #Pooling
+    model.add(tf.keras.layers.BatchNormalization())
+    model.add(tf.keras.layers.MaxPool2D(pool_size = 2, strides = 2))
+    model.add(tf.keras.layers.Dropout(0.25))
 
-    model.add(Flatten()) 
-    model.add(Dense(256,activation = 'relu'))
-    model.add(BatchNormalization())
-    model.add(Dropout(0.25))
+    model.add(tf.keras.layers.Flatten())
+    #Full Connection
 
-    model.add(Dense(512,activation = 'relu'))
-    model.add(BatchNormalization())
-    model.add(Dropout(0.25))
+    #Hidden Layers
+    model.add(tf.keras.layers.Dense(units = 128, activation = 'relu'))
+    model.add(tf.keras.layers.BatchNormalization())
+    model.add(tf.keras.layers.Dropout(0.25))
 
-    model.add(Dense(hp.num_class, activation='softmax'))
-    print(model.summary())
+    model.add(tf.keras.layers.Dense(units = 512, activation = 'relu'))
+    model.add(tf.keras.layers.BatchNormalization())
+    model.add(tf.keras.layers.Dropout(0.25))
+
+    model.add(tf.keras.layers.Dense(units = 7, activation = 'softmax'))
+
     return model
