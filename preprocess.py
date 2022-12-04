@@ -5,13 +5,14 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import hp
 import matplotlib.pyplot as plt
-
+import cv2
+from skimage.feature import hog
 
 
 def preprocess(train_dir,test_dir,BATCH_SIZE):
-    SEED = 12
-    IMG_HEIGHT = 128
-    IMG_WIDTH = 128
+    SEED = 42
+    IMG_HEIGHT = 48
+    IMG_WIDTH = 48
 
     train_datagen = ImageDataGenerator(horizontal_flip=True,
                                     width_shift_range=0.1,
@@ -28,7 +29,8 @@ def preprocess(train_dir,test_dir,BATCH_SIZE):
                                                 color_mode='grayscale',
                                                 class_mode='categorical',
                                                 subset='training', 
-                                                seed = SEED)
+                                                seed = SEED,
+                                                )
 
     val_gen = train_datagen.flow_from_directory(directory=train_dir,
                                                 target_size=(IMG_HEIGHT, IMG_WIDTH),
@@ -54,21 +56,33 @@ def preprocess(train_dir,test_dir,BATCH_SIZE):
 
 
 
-# img1 = plt.imread('/Users/jiataoyuan/Desktop/final project/archive/train/angry/im0.png')
-# img2 = plt.imread('/Users/jiataoyuan/Desktop/final project/archive/train/disgusted/im0.png')
-# img3 = plt.imread('/Users/jiataoyuan/Desktop/final project/archive/train/fearful/im0.png')
-# img4 = plt.imread('/Users/jiataoyuan/Desktop/final project/archive/train/happy/im0.png')
-# img5 = plt.imread('/Users/jiataoyuan/Desktop/final project/archive/train/neutral/im0.png')
-# img6 = plt.imread('/Users/jiataoyuan/Desktop/final project/archive/train/sad/im0.png')
-# img7 = plt.imread('/Users/jiataoyuan/Desktop/final project/archive/train/surprised/im0.png')
+# img1 = cv2.imread('./data/train/angry/im0.png')
+# img1 = cv2.resize(img1,(128,64))
+# print(img1.shape)
+# fd, hog_image = hog(img1 , orientations=9, pixels_per_cell=(8, 8), 
+#                     cells_per_block=(2, 2), visualize=True, multichannel=True)
+# cv2.imshow('img',hog_image)
+# cv2.waitKey(0)
+# cv2.imshow('img',img1)
+# cv2.waitKey(0)
 
-# plt.imshow(img1)
-# plt.imshow(img2)
-# plt.imshow(img3)
-# plt.imshow(img4)
-# plt.imshow(img5)
-# plt.imshow(img6)
-# plt.imshow(img7)
+# img2 = plt.imread('./data/train/fearful/im0.png')
+# img3 = plt.imread('./data/train/happy/im0.png')
+# img4 = plt.imread('./data/train/neutral/im0.png')
+# img5 = plt.imread('./data/train/sad/im0.png')
+# img6 = plt.imread('./data/train/surprised/im0.png')
+# img7 = plt.imread('./data/train/disgusted/im0.png')
+# plt.imshow(img2, cmap="gray")
+# plt.show()
+# plt.imshow(img3, cmap="gray")
+# plt.show()
+# plt.imshow(img4, cmap="gray")
+# plt.show()
+# plt.imshow(img5, cmap="gray")
+# plt.show()
+# plt.imshow(img6, cmap="gray")
+# plt.show()
+# plt.imshow(img7, cmap="gray")
 # plt.show()
 
 

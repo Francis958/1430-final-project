@@ -39,7 +39,7 @@ def convolutional_block(x, filter):
     x = tf.keras.layers.Activation('relu')(x)
     return x
 
-def ResNet34(shape = (128, 128, 1), classes = 7):
+def ResNet34(shape = (48, 48, 1), classes = 7):
     # Step 1 (Setup Input Layer)
     x_input = tf.keras.layers.Input(shape)
     x = tf.keras.layers.ZeroPadding2D((3, 3))(x_input)

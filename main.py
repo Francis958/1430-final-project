@@ -23,15 +23,15 @@ def parse_args():
 
 
 if __name__ == '__main__':
-    train_dir = '/Users/jiataoyuan/Desktop/final_project/archive/train'
-    test_dir = '/Users/jiataoyuan/Desktop/final_project/archive/test'  
+    train_dir = './data/train'
+    test_dir = './data/test'  
     ARGS = parse_args()
     if ARGS.model == 'Resnet':
         my_model = model.ResNet34()
         train(train_dir,test_dir,my_model,ARGS.model)
     elif ARGS.model == 'base_model':
         my_model = model.basic_model()
-        train(train_dir,test_dir,my_model)
+        train(train_dir,test_dir,my_model,ARGS.model)
 
 
     
