@@ -14,8 +14,8 @@ def preprocess(train_dir,test_dir,BATCH_SIZE):
     IMG_HEIGHT = 48
     IMG_WIDTH = 48
 
-    train_datagen = ImageDataGenerator(validation_split=0.2,
-                                    rescale=1./255)
+    train_datagen = ImageDataGenerator(featurewise_center = False,featurewise_std_normalization = False, rotation_range = 10,\
+    rescale=1./255,width_shift_range = 0.1,height_shift_range=0.1,zoom_range =0.1,horizontal_flip = True)
     test_datagen = ImageDataGenerator(rescale=1./255)
 
     train_gen = train_datagen.flow_from_directory(directory=train_dir,
@@ -28,14 +28,6 @@ def preprocess(train_dir,test_dir,BATCH_SIZE):
                                                 seed = SEED,
                                                 )
 
-    val_gen = train_datagen.flow_from_directory(directory=train_dir,
-                                                target_size=(IMG_HEIGHT, IMG_WIDTH),
-                                                batch_size=BATCH_SIZE,
-                                                shuffle=True,
-                                                color_mode='grayscale',
-                                                class_mode='categorical',
-                                                subset='validation', 
-                                                seed = SEED)
     test_gen = test_datagen.flow_from_directory(directory=test_dir,
                                                 target_size=(IMG_HEIGHT, IMG_WIDTH),
                                                 batch_size=1,
@@ -44,7 +36,7 @@ def preprocess(train_dir,test_dir,BATCH_SIZE):
                                                 class_mode='categorical',
                                                 subset='training', 
                                                 seed = SEED)
-    return train_gen,val_gen,test_gen
+    return train_gen,test_gen
 
 
 

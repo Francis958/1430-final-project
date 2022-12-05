@@ -16,7 +16,7 @@ def parse_args():
     parser.add_argument(
         "--model",
         required=True,
-        choices=["Resnet", "base_model","simple_CNN"],
+        choices=["Resnet","base_model","mini_Inception","big_Inception"],
         help="""model selection""",
     )
     return parser.parse_args()
@@ -30,10 +30,13 @@ if __name__ == '__main__':
         my_model = model.ResNet34()
         train(train_dir,test_dir,my_model,ARGS.model)
     elif ARGS.model == 'base_model':
-        my_model = model.basic_model()
-        train(train_dir,test_dir,my_model,ARGS.model)
-    elif ARGS.model == 'simple_CNN':
         my_model = model.simple_CNN(hp.shape,hp.num_class)
+        train(train_dir,test_dir,my_model,ARGS.model)
+    elif ARGS.model == 'mini_Inception':
+        my_model = model.mini_Inception(hp.shape,hp.num_class)
+        train(train_dir,test_dir,my_model,ARGS.model)
+    elif ARGS.model == 'big_Inception':
+        my_model = model.big_Inception(hp.shape,hp.num_class)
         train(train_dir,test_dir,my_model,ARGS.model)
 
 
