@@ -1,6 +1,7 @@
 # Emotion Classifier
 * You can git clone this repo and run this model through the command line with the command:<br />
 python main.py --model [Resnet,mini_Inception,Big_Inception,base_model] <br>
+* To make your prediction using the trained model, use python main.py --evaluate --data [YOUR_DATA_PATH] --model_weights [YOUR_MODEL_WEIGHTS_PATH] 
 You could try to connect the folked Github repo to the Colab to make fully use of the Colab GPU with your personal Token specifcied.
 * Dataset: FER_2013
 
