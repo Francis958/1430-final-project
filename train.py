@@ -13,8 +13,8 @@ import numpy as np
 
 def train(train_dir,test_dir,my_model,model_name):
    train_gen,test_gen = preprocess(train_dir,test_dir,hp.BATCH_SIZE)
-   class_weights = compute_class_weight(class_weight = 'balanced',classes = np.unique(train_gen.classes),y = train_gen.classes)
-   train_class_weights = dict(enumerate(class_weights))
+   # class_weights = compute_class_weight(class_weight = 'balanced',classes = np.unique(train_gen.classes),y = train_gen.classes)
+   # train_class_weights = dict(enumerate(class_weights))
 
    initial_learning_rate = hp.initial_learning_rate
    lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
@@ -42,7 +42,7 @@ def train(train_dir,test_dir,my_model,model_name):
 
    callbacks_list = [early_stop,model_checkpoint_callback,tensor_board]
    my_model.compile(optimizer = tf.keras.optimizers.Adam(lr_schedule),loss='categorical_crossentropy',metrics = 'accuracy')
-   history = my_model.fit(x = train_gen, epochs = hp.epochs,validation_data = test_gen,callbacks = callbacks_list,class_weight = train_class_weights)
+   history = my_model.fit(x = train_gen, epochs = hp.epochs,validation_data = test_gen,callbacks = callbacks_list)
    print(pd.DataFrame(history.history))
 
 
