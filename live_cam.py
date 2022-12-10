@@ -6,6 +6,8 @@ import numpy as np
 from tensorflow.keras.models import load_model
 import cv2
 
+## This code is borrowed from Github 
+
 emotions = {
     0: {
         "emotion": "Angry",
@@ -56,8 +58,8 @@ faceLandmarks = "./shape_predictor_68_face_landmarks.dat/shape_predictor_68_face
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(faceLandmarks)
 
-model_ = model.simple_CNN(hp.shape,hp.num_class)
-model_.load_weights(r'D:\Desktop\1430-final-project\base_model\2022-12-05_01-18-26_AM\checkpoint\val_acc-0.554-val_loss-1.1659epoch-035.h5')
+model_ = model.mini_Inception(hp.shape,hp.num_class)
+model_.load_weights(r'mini_Inception/2022-12-05_01-51-05_AM/checkpoint/val_acc-0.590-val_loss-1.1005epoch-022.h5')
 emotionTargetSize = model_.input_shape[1:3]
 
 cap = cv2.VideoCapture(0)
@@ -66,7 +68,7 @@ while True:
     ret, frame = cap.read()
     if not ret:
         break
-    frame = cv2.resize(frame, (720, 480))
+    frame = cv2.resize(frame, (1080, 720))
 
     grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     rects = detector(grayFrame, 0)
@@ -74,7 +76,7 @@ while True:
         shape = predictor(grayFrame, rect)
         points = shapePoints(shape)
         (x, y, w, h) = rectPoints(rect)
-        grayFace = grayFrame[y:y + h, x:x + w]
+        grayFace = grayFrame[y:y + h+10, x:x + w]
         try:
             grayFace = cv2.resize(grayFace, (emotionTargetSize))
         except:
@@ -82,7 +84,6 @@ while True:
 
         grayFace = grayFace.astype('float32')
         grayFace = grayFace / 255.0
-        grayFace = (grayFace - 0.5) * 2.0
         grayFace = np.expand_dims(grayFace, 0)
         grayFace = np.expand_dims(grayFace, -1)
         emotion_prediction = model_.predict(grayFace)
