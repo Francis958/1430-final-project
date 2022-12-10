@@ -42,9 +42,8 @@ def preprocess(train_dir,test_dir,BATCH_SIZE):
 
 
 
-
-
-# img1 = cv2.imread('./data/train/angry/im0.png')
+# img1 = cv2.imread(r'D:\Desktop\1430-final-project\CK_data_test\anger\S010_004_00000017.png')
+# print(img1.shape)
 # img1 = cv2.resize(img1,(128,64))
 # print(img1.shape)
 # fd, hog_image = hog(img1 , orientations=9, pixels_per_cell=(8, 8), 

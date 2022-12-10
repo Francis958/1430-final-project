@@ -18,4 +18,4 @@ def prediction(img_path,model_weights_path):
     pred = (np.argmax(prob,axis = 1))
     return mapping[pred[0]]
 
-# print(prediction(r'D:\Desktop\surprise.jpg',r'D:\Desktop\1430-final-project\base_model\2022-12-05_01-18-26_AM\checkpoint\val_acc-0.554-val_loss-1.1659epoch-035.h5'))
+# print(prediction(r'D:\Desktop\1430-final-project\data\test\angry\im15.png',r'D:\Desktop\1430-final-project\base_model\2022-12-05_01-18-26_AM\checkpoint\val_acc-0.554-val_loss-1.1659epoch-035.h5'))
