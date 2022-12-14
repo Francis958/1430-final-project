@@ -59,7 +59,7 @@ detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(faceLandmarks)
 
 model_ = model.mini_Inception(hp.shape,hp.num_class)
-model_.load_weights(r'mini_Inception/2022-12-05_01-51-05_AM/checkpoint/val_acc-0.590-val_loss-1.1005epoch-022.h5')
+model_.load_weights(r'mini_Inception/2022-12-10_11-48-45_PM/checkpoint/val_acc-0.603-val_loss-1.0686epoch-039.h5')
 emotionTargetSize = model_.input_shape[1:3]
 
 cap = cv2.VideoCapture(0)
