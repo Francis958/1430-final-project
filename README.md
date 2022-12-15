@@ -12,7 +12,25 @@ You could try to connect the folked Github repo to the Colab to make fully use o
 * Base_line: Accuracy:0.5 <br>
 * mini_Inception: 0.59 <br>
 * Big_Inception: 0.55, more epochs needed <br>
-# Status:
+
+# Graphical User Interface
+
+You could use the command python live_cam_UI.py to run the program with GUI. Before running the program, you need to install three library 'PyQt5', 'pyshine' and 'imutils' by following commands:
+
+```text
+pip3 install PyQt5
+pip3 install pyshine==0.0.6
+pip3 install imutils
+```
+
+To play with the live_cam_UI, press 'start' button to activate the live camera. 
+
+You can make a screenshot by pressing 'Take picture' button.
+
+To exit the program, please press 'stop' button and then press 'x' button at the top left.
+
+# Status:   
+
 * Need to make further improvement about the emotion classifier's accuracy
 * Need to find and add more training data of different people.
 * Need to replace the emotion with cute emojis :)
