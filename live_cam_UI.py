@@ -1,7 +1,4 @@
-
 # Created by: PyQt5 UI code generator 5.11.3
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QImage
@@ -9,9 +6,6 @@ import cv2, imutils
 import time
 import numpy as np
 
-
-import numpy as np
-import cv2
 import pyshine as ps
 
 import dlib
@@ -20,11 +14,6 @@ import hp
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
-
-try:
-    faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-except Exception as e:
-    print('Warning...',e)
 
 emotions = {
     0: {
@@ -101,10 +90,7 @@ class Ui_MainWindow(object):
         self.verticalSlider.setOrientation(QtCore.Qt.Vertical)
         self.verticalSlider.setObjectName("verticalSlider")
         self.gridLayout.addWidget(self.verticalSlider, 0, 0, 1, 1)
-        # self.verticalSlider_2 = QtWidgets.QSlider(self.centralwidget)
-        # self.verticalSlider_2.setOrientation(QtCore.Qt.Vertical)
-        # self.verticalSlider_2.setObjectName("verticalSlider_2")
-        # self.gridLayout.addWidget(self.verticalSlider_2, 0, 1, 1, 1)
+
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
@@ -133,7 +119,6 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.verticalSlider.valueChanged['int'].connect(self.brightness_value)
-        # self.verticalSlider_2.valueChanged['int'].connect(self.blur_value)
         self.pushButton_2.clicked.connect(self.loadImage)
         self.pushButton.clicked.connect(self.savePhoto)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -142,14 +127,12 @@ class Ui_MainWindow(object):
         self.filename = 'Snapshot '+str(time.strftime("%Y-%b-%d at %H.%M.%S %p"))+'.png' # Will hold the image address location
         self.tmp = None # Will hold the temporary image for display
         self.brightness_value_now = 0 # Updated brightness value
-        self.blur_value_now = 0 # Updated blur value
+        self.emo_value_now = 0 # Updated emotion value
         self.fps=0
         self.started = False
 
     def loadImage(self):
-        """ This function will load the camera device, obtain the image
-            and set it to label using the setPhoto function
-        """
+
         if self.started:
             self.started=False
             self.pushButton_2.setText('Start')	
@@ -159,10 +142,6 @@ class Ui_MainWindow(object):
         
         cam = True # True for webcam
         vid = cv2.VideoCapture(1)
-        # if cam:
-        #     vid = cv2.VideoCapture(1)
-        # else:
-        #     vid = cv2.VideoCapture('video.mp4')
         
         cnt=0
         frames_to_count=20
@@ -172,8 +151,6 @@ class Ui_MainWindow(object):
         
         while(vid.isOpened()):
             QtWidgets.QApplication.processEvents()	
-            # img, self.image = vid.read()
-
             ret, self.image = vid.read()
             if not ret:
                 break
@@ -207,8 +184,9 @@ class Ui_MainWindow(object):
                     cv2.rectangle(self.image, (x + 20, y + h + 20), (x + 110, y + h + 40),
                                   color, -1)
                     cv2.putText(self.image, emotions[emotion_label_arg]['emotion'],
-                                (x + 25, y + h + 36), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
-                                (255, 255, 255), 1, cv2.LINE_AA)
+                                (x + 25, y + h + 36), cv2.FONT_HERSHEY_SIMPLEX, 2,
+                                (255, 255, 255), 2, cv2.LINE_AA)
+                    self.emo_value_now = emotions[emotion_label_arg]['emotion']
                 else:
                     color = (255, 255, 255)
                     cv2.rectangle(self.image, (x, y), (x + w, y + h), color, 2)
@@ -234,10 +212,7 @@ class Ui_MainWindow(object):
                 print('Loop break')
 
     def setPhoto(self,image):
-        """ This function will take image input and resize it 
-            only for display purpose and convert it to QImage
-            to set at the label.
-        """
+
         self.tmp = image
         image = imutils.resize(image,width=640)
         frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -245,27 +220,15 @@ class Ui_MainWindow(object):
         self.label.setPixmap(QtGui.QPixmap.fromImage(image))
 
     def brightness_value(self,value):
-        """ This function will take value from the slider
-            for the brightness from 0 to 99
-        """
+
         self.brightness_value_now = value
         print('Brightness: ',value)
         self.update()
         
-        
-    def blur_value(self,value):
-        """ This function will take value from the slider 
-            for the blur from 0 to 99 """
-        self.blur_value_now = value
-        print('Blur: ',value)
-        self.update()
 
 
     def changeBrightness(self,img,value):
-        """ This function will take an image (img) and the brightness
-            value. It will perform the brightness change using OpenCv
-            and after split, will merge the img and return it.
-        """
+ 
         hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
         h,s,v = cv2.split(hsv)
         lim = 255 - value
@@ -275,53 +238,38 @@ class Ui_MainWindow(object):
         img = cv2.cvtColor(final_hsv,cv2.COLOR_HSV2BGR)
         return img
         
-    def changeBlur(self,img,value):
-        """ This function will take the img image and blur values as inputs.
-            After perform blur operation using opencv function, it returns 
-            the image img.
-        """
-        kernel_size = (value+1,value+1) # +1 is to avoid 0
-        img = cv2.blur(img,kernel_size)
-        return img
 
     def update(self):
-        """ This function will update the photo according to the 
-            current values of blur and brightness and set it to photo label.
-        """
-        img = self.changeBrightness(self.image,self.brightness_value_now)
-        img = self.changeBlur(img,self.blur_value_now)
 
-        # Here we add display text to the image
+        img = self.changeBrightness(self.image,self.brightness_value_now)
+
         text  =  'FPS: '+str(self.fps)
         img = ps.putBText(img,text,text_offset_x=20,text_offset_y=30,vspace=20,hspace=10, font_scale=1.0,background_RGB=(10,20,222),text_RGB=(255,255,255))
         text = str(time.strftime("%H:%M %p"))
         img = ps.putBText(img,text,text_offset_x=self.image.shape[1]-180,text_offset_y=30,vspace=20,hspace=10, font_scale=1.0,background_RGB=(228,20,222),text_RGB=(255,255,255))
         text  =  f"Brightness: {self.brightness_value_now}"
-        img = ps.putBText(img,text,text_offset_x=80,text_offset_y=425,vspace=20,hspace=10, font_scale=1.0,background_RGB=(20,210,4),text_RGB=(255,255,255))
-        # text  =  f'Blur: {self.blur_value_now}: '
-        # img = ps.putBText(img,text,text_offset_x=self.image.shape[1]-200,text_offset_y=425,vspace=20,hspace=10, font_scale=1.0,background_RGB=(210,20,4),text_RGB=(255,255,255))
+        img = ps.putBText(img,text,text_offset_x=20,text_offset_y=625,vspace=20,hspace=10, font_scale=1.0,background_RGB=(20,210,4),text_RGB=(255,255,255))
+        text  =  f'Emotion: {self.emo_value_now} '
+        img = ps.putBText(img,text,text_offset_x=self.image.shape[1]-280,text_offset_y=625,vspace=20,hspace=10, font_scale=1.0,background_RGB=(210,20,4),text_RGB=(255,255,255))
 
 
         self.setPhoto(img)
 
     def savePhoto(self):
-        """ This function will save the image"""
+
         self.filename = 'Snapshot '+str(time.strftime("%Y-%b-%d at %H.%M.%S %p"))+'.png'
         cv2.imwrite(self.filename,self.tmp)
         print('Image saved as:',self.filename)
 
 
     def retranslateUi(self, MainWindow):
+
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Emotion Recognition"))
         self.pushButton_2.setText(_translate("MainWindow", "Start"))
         self.label_2.setText(_translate("MainWindow", "Brightness"))
-        # self.label_3.setText(_translate("MainWindow", "Blur"))
         self.pushButton.setText(_translate("MainWindow", "Take picture"))
 
-# Subscribe to PyShine Youtube channel for more detail! 
-
-# WEBSITE: www.pyshine.com
 
 
 if __name__ == "__main__":
